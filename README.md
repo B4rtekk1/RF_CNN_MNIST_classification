@@ -13,6 +13,10 @@
   - [Testowanie modelu](#testowanie-modelu)
   - [Zapisanie modelu](#zapisanie-modelu)
 - [Dokładność modelu](#dokładność-modelu)
+- [Zadania](#zadania)
+  - [Zadanie 1](#zadanie-1)
+  - [Zadanie 2](#zadanie-2)
+  - [Zadanie 3](#zadanie-3)
 
 ## Przygotowanie danych, losowość i środowisko wykonawcze
 
@@ -236,17 +240,20 @@ Dokładność tego modelu oscyluje w granicach 99% co jest dobrym wynikiem. Osi�
 
 ## Zadania
 
-Zadanie 1.
+### Zadanie 1
+
 W celu osiągnięcia lepszych wyników dodaj kolejną warstwę konwulencyjną do modelu, zmień funkcję aktywacji na inną oraz zwiększ liczbę epok. Możesz wykorzystać jedną z poniższych funkcji aktywacji.
 
-Zadanie 2.
+### Zadanie 2
+
 Aby nie dopuścić do przetrenowania modelu używa się warstw regularyzacyjnych. Zerują one część neuronów dzięki czemu model nie dopasowuje się do danych treningowych. Wprowadza on szum, który pozwala wykrywać bardziej ogólne cechy Dodaj dwie takie warstwy do modelu. Pierwszą po spłaszczeniu danych, drugą między warstwami fc. Można takie dodać za pomocą funkcji:
 
 ```python
 self.dropout1 = nn.Dropout(0.15) # Jako argument podaje się ile procent neuronów ma zostać wyzerowanych
 ```
 
-Zadanie 3.
+### Zadanie 3
+
 Inną metodą zapobiegania przeuczniu jest użycie Batch Normalization. Ta metoda również wprowadza szum w danych. Umożliwia on wprowadzanie wyższych wartości learning rate, co przyspiesza naukę modelu. Stabilizuje gradienty, co również się przyczynia do przyspieszenia trenigu. Gdy już dodasz warstwy normalizacyjne pobaw się hiperparametrami, funkcjami aktywacji tak aby osiągnąć jak najwyższy wynik.
 
 ```python

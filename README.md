@@ -236,7 +236,7 @@ print("Zapisano X_test i y_test")
 
 ### Dokładność modelu
 
-Dokładność tego modelu oscyluje w granicach 99% co jest dobrym wynikiem. Osiągnięcie 100% skuteczności jest niemożliwe, ponieważ niewyraźne pismo, szum wokół zdjęcia sprawiają, że model zaczyna się uczyć złych cech. Sama architektura sieci również ogranicza jej skuteczność, gdybyśmy dodali więcej warstw model wykrywałby mniej oczywiste wzorce. Regularyzacja modelu zeruje część neuronów, więc niektóre cechy są zapominane. Dodanie większej ilości warstw konwulencyjnych, więcej epok, zmiana funkcji aktywacji mogłyby pomóc w osiągnięciu lepszego rezultatu.
+Dokładność tego modelu oscyluje w granicach 98.5% co jest dobrym wynikiem. Osiągnięcie 100% skuteczności jest niemożliwe, ponieważ niewyraźne pismo, ponadto model przystosowuje się do danych treningowowych, co skutkuje tym że model zaczyna się uczyć konkretnych cech. Sama architektura sieci również ogranicza jej skuteczność, gdybyśmy dodali więcej warstw model wykrywałby mniej oczywiste wzorce. Regularyzacja modelu zeruje część neuronów, więc niektóre cechy są zapominane. Dodanie większej ilości warstw konwulencyjnych, więcej epok, zmiana funkcji aktywacji mogłyby pomóc w osiągnięciu lepszego rezultatu.
 
 ## Zadania
 

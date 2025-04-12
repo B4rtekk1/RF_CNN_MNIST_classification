@@ -1,23 +1,22 @@
-## Spis treści
+# Spis treści
 
 - [Przygotowanie danych, losowość i środowisko wykonawcze](#przygotowanie-danych-losowość-i-środowisko-wykonawcze)
-    - [Importy](#importy)
-    - [Losowość](#losowóść)
-    - [GPU](#gpu)
-    - [Przygotowanie danych](#przygotowywanie-danych)
+  - [Importy](#importy)
+  - [Losowość](#losowóść)
+  - [GPU](#gpu)
+  - [Przygotowanie danych](#przygotowywanie-danych)
 - [Architektura sieci neuronowej](#architektura-sieci-neuronowej)
-    - [Wyjaśnienie](#wyjaśnienie)
-    - [Przepływ danych przez sieć neuronową](#przepływ-danych-przez-sieć-neuronową)
-    - [Funkcja strary i optymalizator](#funckja-straty-i-optymalizator)
-    - [Trening modelu](#trening-modelu)
-    - [Testowanie modelu](#testowanie)
-    - [Zapisanie modelu](#zapisanie-modelu)
+  - [Wyjaśnienie](#wyjaśnienie)
+  - [Przepływ danych przez sieć neuronową](#przepływ-danych-przez-sieć-neuronową)
+  - [Funkcja strary i optymalizator](#funckja-straty-i-optymalizator)
+  - [Trening modelu](#trening-modelu)
+  - [Testowanie modelu](#testowanie-modelu)
+  - [Zapisanie modelu](#zapisanie-modelu)
 - [Dokładność modelu](#dokładność-modelu)
 
+## Przygotowanie danych, losowość i środowisko wykonawcze
 
-# Przygotowanie danych, losowość i środowisko wykonawcze
-
-## Importy
+### Importy
 
 ```python
 import torch # Biblioteka do operacji tensorowych oraz budowy modeli uczących
@@ -31,9 +30,10 @@ import numpy as np # Umożliwia operacje na macierzach
 from sklearn.metrics import confusion_matrix # Umożliwia stworzenie macierzy pomyłek
 import seaborn as sns # Modyfikuje dane od wykresu matplotlib
 ```
-## Losowóść
 
-Sieci neuronowe są oparte na losowośći. Losowość sprawia, że każda sieć neuronowa jest wyjątkowa. Sieć zaczyna naukę w innym miejscu, przez co otrzymujemy różne rozwiązania, wzory, dokładność. 
+### Losowóść
+
+Sieci neuronowe są oparte na losowośći. Losowość sprawia, że każda sieć neuronowa jest wyjątkowa. Sieć zaczyna naukę w innym miejscu, przez co otrzymujemy różne rozwiązania, wzory, dokładność.
 
 Ustawiamy ziarno losowości na 42 aby wyniki były powtarzalne-zawsze tekie same. 42 nie jest jakąś specjalną liczbą, tak się poprostu przyjeło.
 
@@ -56,9 +56,9 @@ if torch.cuda.is_available():
     print(f"GPU Name: {torch.cuda.get_device_name(0)}")
 ```
 
-## Przygotowywanie danych
+### Przygotowywanie danych
 
-Pobieramy dane do uczenia modelu oraz dane do testowania modelu. Dzielimy dane uczące na dane treningowe i walidacyjne. Ładujemy dane w postaci tensora, aby móc wykonywać na nich operacje matematyczne. Standardyzujemy wartości pikseli do zakresu $[-1, 1]$, za pomocą wzoru $$ z = \frac{x - \mu}{\sigma} $$. Sieci neuronowe lepiej sobie radzą na liczbach w tym zakresie. 
+Pobieramy dane do uczenia modelu oraz dane do testowania modelu. Dzielimy dane uczące na dane treningowe i walidacyjne. Ładujemy dane w postaci tensora, aby móc wykonywać na nich operacje matematyczne. Standardyzujemy wartości pikseli do zakresu $[-1, 1]$, za pomocą wzoru ![Wzór normalizacji](https://render.githubusercontent.com/render/math?math=z%20%3D%20%5Cfrac%7Bx%20-%20%5Cmu%7D%7B%5Csigma%7D). Sieci neuronowe lepiej sobie radzą na liczbach w tym zakresie.
 
 ```python
 transform = transforms.Compose([
@@ -81,13 +81,14 @@ validloader = DataLoader(validset, batch_size=64, shuffle=False)
 testloader = DataLoader(testset, batch_size=64, shuffle=False)
 ```
 
-# Architektura sieci neuronowej
+## Architektura sieci neuronowej
 
 ```python
 class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__() #Tworzymy klasę sieci konwulencyjnej dziedziczącej po nn.Module
 ```
+
 ### Wyjaśnienie
 
 Używamy konwulencyjnej sieci neuronowej(CNN) powszechniej używanej do zadań związanych z klasyfikacją, detekcją, segmentacją. Sieć konwulencyjna zazwyczaj składa się z paru warstw konwulencyjnych, wartsw pęłni połączonych(fully connected), regularyzacji oraz funkcji aktywacji.
@@ -132,7 +133,7 @@ def forward(self, x):
         return x
 ```
 
-## Funckja straty i optymalizator
+### Funckja straty i optymalizator
 
 Bardzo często funkcja straty definiuje się jako [entropię krzyżową](https://en.wikipedia.org/wiki/Cross-entropy). Zazwyczaj najlepszym optymalizatorem jest [Adam](https://medium.com/@weidagang/demystifying-the-adam-optimizer-in-machine-learning-4401d162cb9e), drugim najczęscięj używanym algorytmem optymalizacyjnym jest [AdamW](https://medium.com/@fernando.dijkinga/the-adamw-optimizer-8ebbd7e1017b)
 
@@ -141,8 +142,7 @@ criterion = nn.CrossEntropyLoss() # Funckja straty
 optimizer = optim.Adam(model.parameters(), lr=0.0015) # Optymalizator, lr oznacza learning rate czyli z jakim przeskokiem uczy się model
 ```
 
-
-## Trening modelu
+### Trening modelu
 
 ```python
 def train_model(model, trainloader, validloader, epochs=10):
@@ -199,7 +199,8 @@ def train_model(model, trainloader, validloader, epochs=10):
 ```python
 train_losses, valid_losses, train_accuracies, valid_accuracies = train_model(model, trainloader, validloader, epochs=12)
 ```
-## Testowanie modelu
+
+### Testowanie modelu
 
 ```python
 model.eval() # Tryb ewaluacji
@@ -219,7 +220,7 @@ test_acc = 100 * correct / total
 print(f"\nTest Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.2f}%")
 ```
 
-## Zapisanie modelu
+### Zapisanie modelu
 
 ```python
 torch.save(model.state_dict(), "mnist_model.pth") # Zapisujemy model
@@ -229,12 +230,11 @@ np.save("y_test.npy", testset.targets.numpy()) # Zapisujemy klasy zbioru testowe
 print("Zapisano X_test i y_test")
 ```
 
-# Dokładność modelu
+### Dokładność modelu
 
 Dokładność tego modelu oscyluje w granicach 99% co jest dobrym wynikiem. Osiągnięcie 100% skuteczności jest niemożliwe, ponieważ niewyraźne pismo, szum wokół zdjęcia sprawiają, że model zaczyna się uczyć złych cech. Sama architektura sieci również ogranicza jej skuteczność, gdybyśmy dodali więcej warstw model wykrywałby mniej oczywiste wzorce. Regularyzacja modelu zeruje część neuronów, więc niektóre cechy są zapominane. Dostwosowanie hiperparametrów mogłoby zwiększyć dokładność modelu.
 
-
-# Testowanie na własnym piśmie
+## Testowanie na własnym piśmie
 
 Aby przetestować model na sobie należy odpalić np. photoshopa ustawić czarne tło o wymiarze 28 x 28 lub jego wielkokrotność, w ustawieniach pędzla wybrać shape dynamics, ustawić hardness na 20% i usatwić rozmiar pędzla na 2 lub odpowiednio więcej(najlepiej 14 razy mniejszy niż wymiar obrazu, np. jeśli rozmiar obrazu wynosi 56 x 56 to rozmiar pędzla powinien wynosić 4)
 

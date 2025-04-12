@@ -58,7 +58,7 @@ if torch.cuda.is_available():
 
 ### Przygotowywanie danych
 
-Pobieramy dane do uczenia modelu oraz dane do testowania modelu. Dzielimy dane uczące na dane treningowe i walidacyjne. Ładujemy dane w postaci tensora, aby móc wykonywać na nich operacje matematyczne. Standardyzujemy wartości pikseli do zakresu $[-1, 1]$, za pomocą wzoru ![Wzór normalizacji](https://render.githubusercontent.com/render/math?math=z%20%3D%20%5Cfrac%7Bx%20-%20%5Cmu%7D%7B%5Csigma%7D). Sieci neuronowe lepiej sobie radzą na liczbach w tym zakresie.
+Pobieramy dane do uczenia modelu oraz dane do testowania modelu. Dzielimy dane uczące na dane treningowe i walidacyjne. Ładujemy dane w postaci tensora, aby móc wykonywać na nich operacje matematyczne. Standardyzujemy wartości pikseli do zakresu $[-1, 1]$, za pomocą wzoru $\sqrt{3x-1}+(1+x)^2$. Sieci neuronowe lepiej sobie radzą na liczbach w tym zakresie.
 
 ```python
 transform = transforms.Compose([

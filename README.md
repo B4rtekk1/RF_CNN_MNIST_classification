@@ -8,7 +8,7 @@
 - [Architektura sieci neuronowej](#architektura-sieci-neuronowej)
   - [Wyjaśnienie](#wyjaśnienie)
   - [Przepływ danych przez sieć neuronową](#przepływ-danych-przez-sieć-neuronową)
-  - [Funkcja strary i optymalizator](#funckja-straty-i-optymalizator)
+  - [Funkcja straty i optymalizator](#funckja-straty-i-optymalizator)
   - [Trening modelu](#trening-modelu)
   - [Testowanie modelu](#testowanie-modelu)
   - [Zapisanie modelu](#zapisanie-modelu)

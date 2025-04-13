@@ -244,6 +244,8 @@ Dokładność tego modelu oscyluje w granicach 98.5% co jest dobrym wynikiem. Os
 
 W celu osiągnięcia lepszych wyników dodaj kolejną warstwę konwulencyjną do modelu, zmień funkcję aktywacji na inną oraz zwiększ liczbę epok. Możesz wykorzystać jedną z poniższych funkcji aktywacji.
 
+![Activation functions](activation_functions.jpg)
+
 ### Zadanie 2
 
 Aby nie dopuścić do przetrenowania modelu używa się warstw regularyzacyjnych. Zerują one część neuronów dzięki czemu model nie dopasowuje się do danych treningowych. Wprowadza on szum, który pozwala wykrywać bardziej ogólne cechy Dodaj dwie takie warstwy do modelu. Pierwszą po spłaszczeniu danych, drugą między warstwami fc. Można takie dodać za pomocą funkcji:

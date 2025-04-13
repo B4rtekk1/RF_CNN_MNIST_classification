@@ -111,6 +111,7 @@ Funckja aktywacji - umożliwia uczenie się nieliniowych wartości
 self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1) # Pierwsza wartswa konwulencyjna
 self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1) # Druga warstwa konwulencyjna
 self.pool = nn.MaxPool2d(2, 2) # Z mapy cech przechodzimy filtrem 2x2 i wybieramy największą wartość z każdego filtru, dwukrotnie zmniejsza rozmiar zdjęcia
+self.flatten = nn.Flatten()
 self.fc1 = nn.Linear(64 * 14 * 14, 128) # Sieć fc
 self.fc2 = nn.Linear(128, 10) # Druga sieć fully concted
 self.act = nn.GELU() # Funkcja aktywacji

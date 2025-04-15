@@ -2,7 +2,7 @@
 
 - [Przygotowanie danych, losowość i środowisko wykonawcze](#przygotowanie-danych-losowość-i-środowisko-wykonawcze)
   - [Importy](#importy)
-  - [Losowość](#losowóść)
+  - [Losowość](#losowość)
   - [GPU](#gpu)
   - [Przygotowanie danych](#przygotowywanie-danych)
 - [Architektura sieci neuronowej](#architektura-sieci-neuronowej)
@@ -35,11 +35,11 @@ from sklearn.metrics import confusion_matrix # Umożliwia stworzenie macierzy po
 import seaborn as sns # Modyfikuje dane od wykresu matplotlib
 ```
 
-### Losowóść
+### Losowość
 
 Sieci neuronowe są oparte na losowośći. Losowość sprawia, że każda sieć neuronowa jest wyjątkowa. Sieć zaczyna naukę w innym miejscu, przez co otrzymujemy różne rozwiązania, wzory, dokładność.
 
-Ustawiamy ziarno losowości na 42 aby wyniki były powtarzalne-zawsze tekie same. 42 nie jest jakąś specjalną liczbą, tak się poprostu przyjeło.
+Ustawiamy ziarno losowości na 42 aby wyniki były powtarzalne-zawsze tekie same. 42 nie jest jakąś specjalną liczbą, tak się po prostu przyjeło.
 
 ```python
 np.random.seed(42) # Ustawia ziarno losowości numpy na 42
@@ -65,21 +65,21 @@ if torch.cuda.is_available():
 Pobieramy dane do uczenia modelu oraz dane do testowania modelu. Dzielimy dane uczące na dane treningowe i walidacyjne. Ładujemy dane w postaci tensora, aby móc wykonywać na nich operacje matematyczne. Nomralizujemy wartości pikseli do zakresu $[-1, 1]$, za pomocą wzoru $z=\frac{x - \mu}{\sigma}$, gdzie $\mu$ to średnia arytmetyczna, $\sigma$ to odchylenie stanardowe. Sieci neuronowe lepiej sobie radzą na liczbach w tym zakresie.
 
 ```python
-transform = transforms.Compose([
+transform = transforms.Compose([ # Normalizujemy dane
     transforms.ToTensor(),
      transforms.Normalize((0.5,), (0.5,))
-    ]) # Normalizujemy dane
+    ])
 
-trainset_full = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform) # Pobieramy zbiór uczący
+full_trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform) # Pobieramy zbiór uczący
 testset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform) # Pobieramy zbiór testowy
 
 train_indices = list(range(0, int(len(full_trainset) * 0.85))) # Jako dane treningowe bierzemy 85% wszytskich danych
 validation_indices = list(range(int(len(full_trainset) * 0.85), len(full_trainset))) # Jako dane walidacyjne bierzemy pozostałe 15%
-trainset = Subset(full_trainset, train_indices) # Tworzymy podzbiór treningowy
-validation_set = Subset(full_trainset, validation_indices) # Tworzymy podzbiór walidacyjny
+trainset = Subset(full_trainset, train_indices) # Ostateczny zbiór trenigowy
+validation_set = Subset(full_trainset, validation_indices) # Ostateczny zbiór walidacyjny
 ```
 
-Ładujemy dane
+Ładujemy dane. Batch size oznacza kest zdjęć razem z etykiętą w jednej partii danych. Nie należy wczytywać wszystkich zdjęć naraz, ponieważ karta graficzna ma ograniczoną pamięć, duża ilość zdjęć spowolniła by proces uczenia.
 
 ```python
 trainloader = DataLoader(trainset, batch_size=64, shuffle=True)
@@ -97,23 +97,25 @@ class CNN(nn.Module):
 
 ### Wyjaśnienie
 
-Używamy konwulencyjnej sieci neuronowej(CNN) powszechniej używanej do zadań związanych z klasyfikacją, detekcją, segmentacją. Sieć konwulencyjna zazwyczaj składa się z paru warstw konwulencyjnych, wartsw pęłni połączonych(fully connected) oraz funkcji aktywacji.
+Używamy konwulencyjnej sieci neuronowej(CNN) powszechniej używanej do zadań związanych z klasyfikacją, detekcją, segmentacją. Sieć konwulencyjna zazwyczaj składa się z paru warstw konwulencyjnych, wartsw pełni połączonych(fully connected) oraz funkcji aktywacji. W wyniku przesuwania się filtru powstaje mapa cech. Mapa cech może reprezentować specyficzne cechy obrazu, takie jak krawędzie, tekstury czy wzorce. W wyniku kernela przez obraz powstaje jego uproszczona wersja zawierająca jego charakterystyczne cechy. Trudno jest to dokładnie wyjaśnić, ponieważ sieci neuronowe to tak zwane "czarne skrzynki" - większośc ludzi nie rozumie co tam się dzieje, ze względu na zaawansowaną matematyke. Romiar mapy cech można określić za pomocą wzoru $Rozmiar mapy cech=\frac{(W - K + 2P)}{S}+1$. W - rozmiar wejściowy, w pierwszej warstwie jest to wysokość/szerokość zdjęcia, w kolejnych warstwach aktualny rozmiar mapy cech. K - rozmiar filtra. P - padding czyli o ile "zwiększamy" obrazek poprzez dodawanie pustych pikseli. S - stride, o ile pikseli porusza się filtr, domyślnie 1.
 
-Kernel - jest to "filtr" który przesuwa się po obrazku i wyciąga cechy z danej częsci obrazka. Najlepsze rezultaty osiąga się gdy ten filtr ma nieparzyste wymiary(np. $3 \times 3$). Po jej przejściu rozmiar obraza i jego cechy są inne.
+Warstwa pool odpowiada za wyciąganie w tym przypadku największej wartości znajdujacej się w rozmiarze filtra. Po zastosowaniu filtra rozmiar mapy cech zmniejsza się dwukrotnie. Istnieją różne rodzaje pooling takie jak: Avarage pooling, Max pooling, min pooling
 
-Warstwa w pełni połączona łączy cechy wyciągnięte przez każdy filtr
+Kernel - jest to "filtr" który przesuwa się po obrazku i wyciąga cechy z danej częsci obrazka. Najlepsze rezultaty osiąga się gdy ten filtr ma nieparzyste wymiary(np. $5 \times 5$). Po jej przejściu rozmiar obraza i jego cechy są inne.
 
-Funckja aktywacji - umożliwia uczenie się nieliniowych wartości
+Warstwa w pełni połączona Warstwa w pełni połączona integruje cechy z map cech, aby dokonać klasyfikacji.
+
+Funckja aktywacji - pozwala modelowi rozwiązywać nieliniowe problemy, których nie da się opisać liniowo.
 
 ![Wizualizacja wartswy konwulencyjnej](warstwa_konwulencyjna.gif)
 
 ```python
-self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1) # Pierwsza wartswa konwulencyjna
-self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1) # Druga warstwa konwulencyjna
+self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1) # Pierwsza warstwa oknwulencyjna zmieniamy 1 ceche na 32
+self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1) # Druga warstwa konwulencyjna zmieniamy 32 cechy na 64
 self.pool = nn.MaxPool2d(2, 2) # Z mapy cech przechodzimy filtrem 2x2 i wybieramy największą wartość z każdego filtru, dwukrotnie zmniejsza rozmiar zdjęcia
 self.flatten = nn.Flatten()
-self.fc1 = nn.Linear(64 * 14 * 14, 128) # Sieć fc
-self.fc2 = nn.Linear(128, 10) # Druga sieć fully concted
+self.fc1 = nn.Linear(64 * 14 * 14, 128) # Sieć fc redukuje liczbę wymiarow do 128 neuronow
+self.fc2 = nn.Linear(128, 10) # Druga sieć fully concted redukuje do 10 neuronow czyli klas 0-9
 self.act = nn.GELU() # Funkcja aktywacji
 ```
 
@@ -137,7 +139,7 @@ def forward(self, x):
 
 ### Funckja straty i optymalizator
 
-Bardzo często funkcja straty definiuje się jako [entropię krzyżową](https://en.wikipedia.org/wiki/Cross-entropy). Zazwyczaj najlepszym optymalizatorem jest [Adam](https://medium.com/@weidagang/demystifying-the-adam-optimizer-in-machine-learning-4401d162cb9e), drugim najczęscięj używanym algorytmem optymalizacyjnym jest [AdamW](https://medium.com/@fernando.dijkinga/the-adamw-optimizer-8ebbd7e1017b)
+Bardzo często funkcja straty definiuje się jako [entropię krzyżową](https://en.wikipedia.org/wiki/Cross-entropy). Zazwyczaj najlepszym optymalizatorem jest [Adam](https://medium.com/@weidagang/demystifying-the-adam-optimizer-in-machine-learning-4401d162cb9e), w dużym skrócie mierzy różnice między predykcją a prawdziwą etykietą. Drugim najczęscięj używanym algorytmem optymalizacyjnym jest [AdamW](https://medium.com/@fernando.dijkinga/the-adamw-optimizer-8ebbd7e1017b)
 
 ```python
 model = CNN().to(device) # Model będzie się wykonywał na karcie graficznej
